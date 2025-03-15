@@ -1,7 +1,9 @@
+package code.Calculator.src.main.java.code.calculator;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.script.*;
+@SuppressWarnings("unused")
 public class DevsCalculator extends JFrame {
     private final JTextArea display;
     private final StringBuilder expression;
