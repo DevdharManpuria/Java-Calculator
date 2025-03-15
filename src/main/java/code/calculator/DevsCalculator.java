@@ -1,4 +1,4 @@
-package code.Calculator.src.main.java.code.calculator;
+package code.calculator;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
