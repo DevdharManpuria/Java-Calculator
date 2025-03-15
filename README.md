@@ -41,4 +41,4 @@ devs-calculator/ ├── pom.xml └── src └── main └── java �
 If you want to run the program and then want the .class files deleted so that there is no extra memory kept taken up after running the program
 - **Save**: Save the .bat file
 - **Navigate**: cd path\to\project
-- **Run**: runAndClean.bat
+- **Run**: runAndClean.bat or .\runAndClean.bat (if you are using powershell)
