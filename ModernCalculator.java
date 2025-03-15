@@ -9,7 +9,7 @@ public class ModernCalculator extends JFrame {
     private boolean resultShown = false;
     public ModernCalculator() {
         setTitle("Modern Calculator");
-        setSize(350, 500);
+        setSize(350, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
         display = new JTextField();
@@ -20,16 +20,17 @@ public class ModernCalculator extends JFrame {
         display.setForeground(Color.WHITE);
         add(display, BorderLayout.NORTH);
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 4, 10, 10));
+        panel.setLayout(new GridLayout(6, 4, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.setBackground(Color.DARK_GRAY);
         String[] buttons = {
-            "C", "<--", "/", "*",
-            "7", "8", "9", "-",
-            "4", "5", "6", "+",
-            "1", "2", "3", "=",
-            "0", ".", "", ""
-        };
+            "C", "<--", "sqrt", "^",
+            "7", "8", "9", "/",
+            "4", "5", "6", "*",
+            "1", "2", "3", "-",
+            "0", ".", "mod", "+",
+            "=", "log", "sin", "cos"
+        };        
         for (String text : buttons) {
             if (text.equals("")) {
                 panel.add(new JLabel());
@@ -47,7 +48,10 @@ public class ModernCalculator extends JFrame {
                             backspace();
                         } else if(cmd.equals("=")) {
                             calculate();
-                        } else if(cmd.equals("+") || cmd.equals("-") || cmd.equals("*") || cmd.equals("/")) {
+                        } else if(cmd.equals("sqrt") || cmd.equals("log") || cmd.equals("sin") || cmd.equals("cos")) {
+                            calculateUnary(cmd);
+                        } else if(cmd.equals("+") || cmd.equals("-") || cmd.equals("*") || cmd.equals("/") ||
+                                  cmd.equals("^") || cmd.equals("mod")) {
                             setOperator(cmd);
                         } else {
                             append(cmd);
@@ -104,6 +108,8 @@ public class ModernCalculator extends JFrame {
                     return;
                 }
             }
+            case "^" -> result = Math.pow(operand1, operand2);
+            case "mod" -> result = operand1 % operand2;
         }
         display.setText(String.valueOf(result));
         operand1 = result;
@@ -125,6 +131,26 @@ public class ModernCalculator extends JFrame {
                 display.setText(text.substring(0, text.length()-1));
         }
     }
+    private void calculateUnary(String op) {
+        if(currentInput.isEmpty() && display.getText().isEmpty())
+            return;
+        double value = 0;
+        try {
+            value = currentInput.isEmpty() ? Double.parseDouble(display.getText()) : Double.parseDouble(currentInput);
+        } catch(NumberFormatException e) {
+            value = 0;
+        }
+        double result = 0;
+        switch(op) {
+            case "sqrt" -> result = Math.sqrt(value);
+            case "log" -> result = Math.log10(value);
+            case "sin" -> result = Math.sin(Math.toRadians(value));
+            case "cos" -> result = Math.cos(Math.toRadians(value));
+        }
+        display.setText(String.valueOf(result));
+        currentInput = String.valueOf(result);
+        resultShown = true;
+    }    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new ModernCalculator());
     }
