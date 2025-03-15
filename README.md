@@ -36,3 +36,9 @@ devs-calculator/ ├── pom.xml └── src └── main └── java �
 - **target/**: Generated build artifacts (ignored by Git).
 - **DevsCalculator.java**: The main class with `public static void main(String[] args)`.
 - **RoundedButton.java**: A custom button class for rounded UI elements.
+
+## Bonus
+If you want to run the program and then want the .class files deleted so that there is no extra memory kept taken up after running the program
+- **Save**: Save the .bat file
+- **Navigate**: cd path\to\project
+- **Run**: runAndClean.bat
