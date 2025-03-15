@@ -1,19 +1,17 @@
-package code.Calculator;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 public class ModernCalculator extends JFrame {
     private JTextField display;
-    private StringBuilder input;
+    private String currentInput = "";
+    private int operand1 = 0;
     private String operator = "";
-    private int num1 = 0, num2 = 0;
-    private boolean isNewInput = false;
+    private boolean resultShown = false;
     public ModernCalculator() {
-        setTitle("Dev's Calculator");
+        setTitle("Modern Calculator");
         setSize(350, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
-        input = new StringBuilder();
         display = new JTextField();
         display.setFont(new Font("Arial", Font.BOLD, 24));
         display.setHorizontalAlignment(JTextField.RIGHT);
@@ -43,22 +41,16 @@ public class ModernCalculator extends JFrame {
                 button.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         String cmd = e.getActionCommand();
-                        switch (cmd) {
-                            case "C":
-                                clear();
-                                break;
-                            case "<--":
-                                backspace();
-                                break;
-                            case "=":
-                                calculate();
-                                break;
-                            case "+": case "-": case "*": case "/":
-                                setOperator(cmd);
-                                break;
-                            default:
-                                append(cmd);
-                                break;
+                        if(cmd.equals("C")) {
+                            clear();
+                        } else if(cmd.equals("<--")) {
+                            backspace();
+                        } else if(cmd.equals("=")) {
+                            calculate();
+                        } else if(cmd.equals("+") || cmd.equals("-") || cmd.equals("*") || cmd.equals("/")) {
+                            setOperator(cmd);
+                        } else {
+                            append(cmd);
                         }
                     }
                 });
@@ -69,46 +61,68 @@ public class ModernCalculator extends JFrame {
         setVisible(true);
     }
     private void append(String value) {
-        if (isNewInput) {
-            input.setLength(0);
-            isNewInput = false;
+        if(resultShown) {
+            display.setText("");
+            currentInput = "";
+            resultShown = false;
         }
-        input.append(value);
-        display.setText(input.toString());
+        currentInput += value;
+        display.setText(display.getText() + value);
     }
     private void setOperator(String op) {
-        if (input.length() == 0) return;
-        num1 = Integer.parseInt(input.toString());
+        if(currentInput.isEmpty() && display.getText().isEmpty())
+            return;
+        try {
+            operand1 = currentInput.isEmpty() ? Integer.parseInt(display.getText()) : Integer.parseInt(currentInput);
+        } catch(NumberFormatException e) {
+            operand1 = 0;
+        }
         operator = op;
-        input.append(" ").append(op).append(" ");
-        display.setText(input.toString());
-        isNewInput = true;
+        display.setText(display.getText() + " " + op + " ");
+        currentInput = "";
     }
     private void calculate() {
-        String[] parts = input.toString().split(" ");
-        if (parts.length < 3) return;
-        num1 = Integer.parseInt(parts[0]);
-        num2 = Integer.parseInt(parts[2]);
-        int result = 0;
-        switch (operator) {
-            case "+" -> result = num1 + num2;
-            case "-" -> result = num1 - num2;
-            case "*" -> result = num1 * num2;
-            case "/" -> result = (num2 != 0) ? num1 / num2 : 0;
+        if(operator.isEmpty() || currentInput.isEmpty())
+            return;
+        int operand2 = 0;
+        try {
+            operand2 = Integer.parseInt(currentInput);
+        } catch(NumberFormatException e) {
+            operand2 = 0;
         }
-        input.setLength(0);
-        input.append(result);
+        int result = 0;
+        switch(operator) {
+            case "+" -> result = operand1 + operand2;
+            case "-" -> result = operand1 - operand2;
+            case "*" -> result = operand1 * operand2;
+            case "/" -> {
+                if(operand2 != 0)
+                    result = operand1 / operand2;
+                else {
+                    display.setText("Error: Div 0");
+                    clear();
+                    return;
+                }
+            }
+        }
         display.setText(String.valueOf(result));
-        isNewInput = true;
+        operand1 = result;
+        operator = "";
+        currentInput = "";
+        resultShown = true;
     }
     private void clear() {
-        input.setLength(0);
+        currentInput = "";
+        operand1 = 0;
+        operator = "";
         display.setText("");
     }
     private void backspace() {
-        if (input.length() > 0) {
-            input.deleteCharAt(input.length() - 1);
-            display.setText(input.toString());
+        if(!currentInput.isEmpty()) {
+            currentInput = currentInput.substring(0, currentInput.length()-1);
+            String text = display.getText();
+            if(text.length() > 0)
+                display.setText(text.substring(0, text.length()-1));
         }
     }
     public static void main(String[] args) {
