@@ -4,7 +4,7 @@ import java.awt.event.*;
 public class ModernCalculator extends JFrame {
     private JTextField display;
     private String currentInput = "";
-    private int operand1 = 0;
+    private double operand1 = 0;
     private String operator = "";
     private boolean resultShown = false;
     public ModernCalculator() {
@@ -73,7 +73,7 @@ public class ModernCalculator extends JFrame {
         if(currentInput.isEmpty() && display.getText().isEmpty())
             return;
         try {
-            operand1 = currentInput.isEmpty() ? Integer.parseInt(display.getText()) : Integer.parseInt(currentInput);
+            operand1 = currentInput.isEmpty() ? Double.parseDouble(display.getText()) : Double.parseDouble(currentInput);
         } catch(NumberFormatException e) {
             operand1 = 0;
         }
@@ -84,13 +84,13 @@ public class ModernCalculator extends JFrame {
     private void calculate() {
         if(operator.isEmpty() || currentInput.isEmpty())
             return;
-        int operand2 = 0;
+        double operand2 = 0;
         try {
-            operand2 = Integer.parseInt(currentInput);
+            operand2 = Double.parseDouble(currentInput);
         } catch(NumberFormatException e) {
             operand2 = 0;
         }
-        int result = 0;
+        double result = 0;
         switch(operator) {
             case "+" -> result = operand1 + operand2;
             case "-" -> result = operand1 - operand2;
